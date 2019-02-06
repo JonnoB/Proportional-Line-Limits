@@ -1,0 +1,71 @@
+\section{Defining the simulation using the PEARL framework}  
+\label{sect:PEARL}
+Understanding the parameters of a simulation is essential to understanding how a simulation works. A lack of data on the relative behaviour of different simulation methods makes it difficult to compare the results of different studies. To better understand simulation output , simulation parameters need to be clearly defined. Table \ref{tab:SimuParamsABS} gives a taxonomy of the simulation parameters used to define the experiments. The subsequent subsections define each of the parameters and also the options that are implemented in the R Power grid Networking package \cite{JonathanBourne2018a}. The simulation parameters proposed are not meant to be exhaustive but do describe key areas where clarity over simulation strategy helps interpret the results and replicate the experiment.  N.B the attack strategies are deployed within a simulation and are not a part of the parameters.
+
+    
+\begin{table}[ht]
+\centering
+\caption{Classifications}
+\label{tab:SimuParamsABS}
+\begin{tabular}{l|l}
+Class        & Types                     \\ \hline
+Attack Type  & Fixed, Flexible, Adaptive \\
+Physics Model      & Cascading DC, Topological \\
+Removal Regime     & Sequential, Simultaneous, hybrid  \\
+Target Element      & Node, Edge, Both        \\
+Repetition Method & None, Random , Timeseries sampling, Random load        
+\end{tabular}
+\end{table}
+
+\subsection{Physics}
+
+The physics model is usually the most well-defined part of the simulation as it is the rule structure under-which nodes and edges will operate. Line flow limits and balancing method are included as part of the physics model. Although there are many different physics models, in this package I consider only two.
+
+\begin{itemize}
+    \item Cascading DC: This model uses DC flow calculations to decide whether the line-limits have been exceeded. This method can lead to cascading failures as power is redistributed across the network.
+    \item Topological: This is a purely topological view of the power grid in which cascades are not possible. Although there are no cascades, multiple nodes can be lost in a single attack by islanding on a component doesn't have both load and generation. A topological analysis is equivalent to proportional loading when $\alpha = \infty$
+\end{itemize}
+
+\subsection{Element}
+Are Nodes, Edges, or both being targeted during this attack? Certain attack strategies, such as degree, only work one element type, while others can be applied to both, e.g. Net-ability \cite{Arianos2008}.
+
+\begin{itemize}
+    \item Nodes: Attack strategies will only consider nodes
+    \item Edges: Attack strategies will only consider edges
+    \item Both: Attack strategies will consider both nodes and edges. Can only be used for certain metrics
+\end{itemize}
+
+
+\subsection{Attack Type}
+\label{sect:attacktype}
+The attack type defines how an attack strategy will be executed. There are two classes of attack type, single calculation and repeated calculation. For single calculation, the attack order is calculated once before the attack begins. Repeated calculation only finds the next node to be removed and is calculated again every attack round. Below the different attack types are defined.
+
+\begin{itemize}
+    \item Fixed: This single calculation method produces a target vector of $n$ nodes for removal. If some of those nodes are lost before being targeted, then the total amount of nodes targeted for removal will be $k-f$. Where $f$ is the total number of nodes lost due to cascades or islanding
+ 
+    \item Flexible: This single calculation method produces a target vector of $k$ nodes for removal then removes $n$. This attack type is different from the Fixed method as it will always remove $n$ nodes, as long as the graph still has nodes to remove. If $n=20$ and the 19th node is lost in a cascade, the 21st node will be added to the target list.
+
+    \item Adaptive: This is a repeated calculation with the node order being re-calculated at every attack. This attack type allows the order of removal to change as an attack develops. In a degree based attack after a few node removal rounds some previously high degree nodes may have lost several neighbours. In contrast, other loads may not have lost any neighbours and be relatively more important.
+\end{itemize}
+
+\subsection{Removal Regime}
+
+The removal regime describes how nodes or edges will be removed from the network. The regime has implications if the physics model allows cascades. However, removal regime has less affect on non-cascading simulations.
+
+\begin{itemize}
+    \item Sequential: The nodes on the target list are removed sequentially. The resulting cascades (if applicable) are calculated, and the grid is stabilised before the next node is removed
+    \item Simultaneous: The nodes in the target list are removed at the same time. This only makes sense when $k \gg n$
+    \item Hybrid: The nodes are removed in small groups, but the groups are removed sequentially. As an example 30 nodes will be removed however they be removed in 3 groups of 10
+\end{itemize}
+
+\subsubsection{Load Profile}
+
+In many simulations, samples are taken to find a representative final result. In such cases how the samples are chosen needs to be defined.
+
+\begin{itemize}
+    \item None: The most straightforward only a single attack run is made for each strategy using a given load profile
+    \item Random: Only useful for the random attack strategy. The attack is repeated multiple times, and the results averaged. In most other attack strategies the results will be identical
+    \item Time series sampling: When a time series of loads are available for a network, it is randomly sampled to produce a variety of load profiles. Attacks can then be performed across the multiple time points, and the results analysed
+    \item Random Load: Several papers have some variant of randomly assigning loads and generation across the network and then simulating attack. This method can only be used when line-limits are proportional to initial loading
+\end{itemize}
+

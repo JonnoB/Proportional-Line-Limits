@@ -1,0 +1,29 @@
+\subsection{DC flow calculations}
+\label{sect:DCeqs}
+The key to analysing cascading failures in the power-grid are the power flow equations. As mentioned although power transmission uses AC it is common in CNA of the power-grid to use the DC power flow approximations. The DC power-flow equations assume that resistance and phase angle are negligible. They also assume that the voltage across the system is equal. In a power-grid the voltage is at multiple levels. Some researchers propose using a network of networks to strictly maintain the DC assumptions \cite{HalappanavarANetworks}. However other researchers assume the voltage difference for all high voltage lines is small enough to be included together \cite{Rosas-Casals2007TOPOLOGICALATTACKS}.   In this paper, we are in the second group and assume that all high voltage lines can be included together.
+We use the DC flow calculations described by \cite{Pepyne2007TopologyGrids} and \cite{Arianos2008PowerApproach}. The DC power-flow equations are described below.
+
+\begin{equation}
+\label{eq:powerflowTheory}
+    \mathbf{f}= \mathbf{CA(B)^{-1}p}=\mathbf{CA(A^TCA)^{-1}p}
+\end{equation}
+
+\begin{itemize}
+    \item $\mathbf{A_0}$ is the Line Node transfer matrix and is the precursor to $\mathbf{A}$.  It shows the relationship between Lines and Nodes and is a matrix composed of 1,0,-1, where the number refers to the nominal direction of power-flow. The matrix has dimensions $mn$ where $m$ is the number of lines/edges, and $n$ is the number of nodes/vertices.
+
+\item $\mathbf{A}$ is $\mathbf{A_0}$ with the slack bus removed, making $\mathbf{A}$ invertible. The slack bus absorbs or supplies additional power as demanded to balance the system. $\mathbf{A}$ has dimensions $m(n-1)$.
+
+\item $\mathbf{C}$ represents the ease at which power can flow through $\mathbf{A}$. It is called line properties matrix and for DC power is measured using the susceptance which is the inverse of the reactance of the line. Reactance is the imaginary part of Impedance the real part being the resistance. The matrix is diagonal with all values being larger than 0 and has dimensions $mm$. 
+
+\item $\mathbf{B}$ is the susceptance matrix and can be calculated using $\mathbf{B} = \mathbf{A}^T\mathbf{C}\mathbf{A}$. The matrix is symmetrical which in electrical engineering means the system is `Reciprocal'. $\mathbf{B}$ has dimensions $(n-1)(n-1)$.
+
+\item $\mathbf{CA(B)^{-1}}$ is known as the Power Transfer Distribution Factors (PTDF).
+
+\item $\mathbf{p}$, the power injection vector, it has length $(n-1)$ and contains the value of net-generation where values above 0 mean that power is produced and values below 0 mean that power is consumed.
+
+\end{itemize}
+
+
+
+
+A valid question with regards artificial line-limits is whether it matters if damage and collapse order do not accurately reflect the real line-limits if the relative ranking of different vulnerability metrics and attack strategies is stable. If the goal of the research is to state that a centrality based attack does more damage than a degree based attack then as long as the relative ranking of those two metrics is correct it does not matter if the estimates of damage done or the order of network collapse is inaccurate.

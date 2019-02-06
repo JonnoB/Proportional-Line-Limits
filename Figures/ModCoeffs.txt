@@ -1,0 +1,15 @@
+% latex table generated in R 3.5.2 by xtable 1.8-3 package
+% Mon Feb  4 20:15:42 2019
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & type & (Intercept) & Voltage275 & Voltage400 \\ 
+  \hline
+1 & mean & 2.31 & 0.72 & 1.15 \\ 
+  2 & sd & 0.00 & 0.01 & 0.01 \\ 
+   \hline
+\end{tabular}
+\caption{Mean model coefficients and standard deviation across 10-fold cross-validation} 
+\label{tab:ModCoeffs}
+\end{table}

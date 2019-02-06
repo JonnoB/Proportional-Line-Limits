@@ -1,0 +1,19 @@
+% latex table generated in R 3.4.4 by xtable 1.8-3 package
+% Thu Nov 29 18:21:46 2018
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlr}
+  \hline
+ & Metric & value \\ 
+  \hline
+1 & Nodes & 958.00 \\ 
+  2 & Edges & 1415.00 \\ 
+  3 & Components & 1.00 \\ 
+  4 & Betweenness & 8066.01 \\ 
+  5 & Degree & 2.95 \\ 
+  6 & Assortativity & -0.07 \\ 
+  7 & Clustering & 0.04 \\ 
+  8 & Distance & 14.71 \\ 
+   \hline
+\end{tabular}
+\end{table}
